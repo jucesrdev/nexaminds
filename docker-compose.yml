@@ -1,0 +1,22 @@
+services:
+  secure-middleware:
+    build: .
+    container_name: secure-inquiry-middleware
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?Set ENCRYPTION_KEY in .env to a 64-character hex string}
+      AUDIT_LOG_PATH: /app/data/audit-log.json
+      CIRCUIT_FAILURE_THRESHOLD: 3
+      CIRCUIT_RESET_MS: 30000
+      AI_DELAY_MS: 2000
+    volumes:
+      - audit-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  audit-data:
