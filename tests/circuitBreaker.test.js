@@ -93,8 +93,8 @@ describe('CircuitBreaker', () => {
     now += 1_000;
 
     await waitFor(async () => {
-      const value = await breaker.exec(async () => 'half-open-success');
-      expect(value).toBe('half-open-success');
+      const value = await breaker.exec(async () => 'recovered-after-timeout');
+      expect(value).toBe('recovered-after-timeout');
     });
 
     expect(breaker.snapshot().state).toBe(STATES.CLOSED);

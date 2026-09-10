@@ -3,7 +3,6 @@ const { CircuitOpenError } = require('../errors');
 const STATES = {
   CLOSED: 'CLOSED',
   OPEN: 'OPEN',
-  HALF_OPEN: 'HALF_OPEN',
 };
 
 class CircuitBreaker {
@@ -23,10 +22,6 @@ class CircuitBreaker {
   async exec(operation) {
     if (this.isOpenAndCoolingDown()) {
       throw new CircuitOpenError();
-    }
-
-    if (this.state === STATES.OPEN) {
-      this.state = STATES.HALF_OPEN;
     }
 
     try {

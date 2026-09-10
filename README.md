@@ -9,7 +9,7 @@ Express service that redacts PII before a mock AI call, encrypts the original me
 1. **Sanitize** emails, credit cards (Luhn-validated 13–19 digits), and SSNs (formatted or any 9-digit run). Each match becomes `<REDACTED: EMAIL|CREDIT_CARD|SSN>`.
 2. **Audit** the original message with AES-256-GCM and the redacted message in plaintext. Storage is a JSON file.
 3. **Mock AI** waits 2 seconds and returns `Generated Answer`. The AI only sees the redacted text.
-4. **Circuit breaker** trips after 3 consecutive AI failures. Later requests return `Service Busy` immediately and never start the 2s timer. After `CIRCUIT_RESET_MS` the breaker allows one trial call.
+4. **Circuit breaker** trips after 3 consecutive AI failures. Later requests return `Service Busy` immediately and never start the 2s timer. After `CIRCUIT_RESET_MS` new calls are allowed through again.
 
 ## Run locally
 
@@ -58,5 +58,5 @@ Compose refuses to start if `ENCRYPTION_KEY` is missing. The API listens on `htt
 | `ENCRYPTION_KEY` | required | 32-byte AES key as 64 hex characters |
 | `AUDIT_LOG_PATH` | `./data/audit-log.json` | Audit JSON file |
 | `CIRCUIT_FAILURE_THRESHOLD` | `3` | Consecutive failures before open |
-| `CIRCUIT_RESET_MS` | `30000` | Cool-down before a trial call |
+| `CIRCUIT_RESET_MS` | `30000` | Cool-down before calls are allowed again |
 | `AI_DELAY_MS` | `2000` | Mock AI latency |
